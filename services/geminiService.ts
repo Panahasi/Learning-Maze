@@ -1,5 +1,5 @@
 
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI, Type, Modality } from "@google/genai";
 
 // Ensure the API key is available in the environment variables
 if (!process.env.API_KEY) {
@@ -52,6 +52,38 @@ export const generateMisspellings = async (word: string): Promise<string[]> => {
     return generateFallbackMisspellings(word);
   }
 };
+
+/**
+ * Generates speech audio from text using the Gemini TTS API.
+ * @param text The text to convert to speech.
+ * @returns A promise that resolves to a base64 encoded audio string, or null on failure.
+ */
+export const generateSpeech = async (text: string): Promise<string | null> => {
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash-preview-tts",
+      contents: [{ parts: [{ text }] }],
+      config: {
+        responseModalities: [Modality.AUDIO],
+        speechConfig: {
+            voiceConfig: {
+              prebuiltVoiceConfig: { voiceName: 'Kore' }, // A friendly, clear voice
+            },
+        },
+      },
+    });
+    
+    const base64Audio = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+    if (base64Audio) {
+      return base64Audio;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error generating speech with Gemini:", error);
+    return null;
+  }
+};
+
 
 /**
  * A fallback function to generate simple misspellings if the Gemini API fails.

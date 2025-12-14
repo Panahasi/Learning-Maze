@@ -40,6 +40,18 @@ const generateMathQuestion = (operations: MathOperation[]): MathQuestion => {
       correctAnswer = res;
       question = `${num1} ÷ ${num2} = ?`;
       break;
+    case MathOperation.Exponentiation:
+      num1 = Math.floor(Math.random() * 4) + 2; // Base (2 to 5)
+      num2 = Math.floor(Math.random() * 2) + 2; // Exponent (2 to 3)
+      correctAnswer = Math.pow(num1, num2);
+      question = `${num1}^${num2} = ?`;
+      break;
+    case MathOperation.SquareRoot:
+      num2 = Math.floor(Math.random() * 11) + 2; // Result (2 to 12)
+      num1 = num2 * num2; // The number under the root
+      correctAnswer = num2;
+      question = `√${num1} = ?`;
+      break;
     default:
       throw new Error("Invalid math operation");
   }
@@ -147,8 +159,8 @@ export const getDefaultQuestionSets = (): QuestionSet[] => [
         mode: GameMode.Spelling,
         words: [
             {correct: 'friend', incorrect: ['freind', 'frend', 'frind']},
-            {correct: 'their', incorrect: ['thier', 'there', 'theyre']},
-            {correct: 'which', incorrect: ['wich', 'whitch', 'witch']},
+            {correct: 'accommodate', incorrect: ['acommodate', 'accomodate', 'acomodate']},
+            {correct: 'which', incorrect: ['wich', 'whitch', 'whihc']},
             {correct: 'believe', incorrect: ['beleive', 'belive', 'beleev']},
             {correct: 'separate', incorrect: ['seperate', 'seprate', 'separat']},
             {correct: 'necessary', incorrect: ['neccessary', 'necesary', 'nessasary']},

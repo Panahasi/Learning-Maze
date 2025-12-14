@@ -19,6 +19,111 @@
   }
 }
 </script>
+<style>
+    @keyframes fade-in-scale {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .animate-fade-in-scale { animation: fade-in-scale 0.5s ease-out forwards; }
+
+    @keyframes door-pop {
+      0% { transform: scale(0); }
+      70% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    .animate-door-pop {
+        animation: door-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        transform: scale(0); /* initial state */
+    }
+
+    @keyframes pop-in {
+        from { transform: scale(0.5); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+    .animate-pop-in {
+        animation: pop-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-10px) rotate(-5deg); }
+      40% { transform: translateX(10px) rotate(5deg); }
+      60% { transform: translateX(-10px) rotate(-5deg); }
+      80% { transform: translateX(10px) rotate(5deg); }
+    }
+    .animate-shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+    .animate-float { animation: float 3s ease-in-out infinite; }
+
+    @keyframes shine {
+        0% { left: -100%; }
+        100% { left: 200%; }
+    }
+    .animate-shine {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+        transform: skewX(-20deg);
+        animation: shine 3s infinite linear;
+    }
+
+    .wall-pattern {
+        background-color: #1a202c;
+        background-image: 
+          linear-gradient(335deg, rgba(0,0,0,0.3) 23px, transparent 23px),
+          linear-gradient(155deg, rgba(0,0,0,0.3) 23px, transparent 23px),
+          linear-gradient(335deg, rgba(0,0,0,0.3) 23px, transparent 23px),
+          linear-gradient(155deg, rgba(0,0,0,0.3) 23px, transparent 23px);
+        background-size: 58px 58px;
+        background-position: 0px 2px, 4px 35px, 29px 31px, 34px 6px;
+        box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
+    }
+    
+    .dungeon-bg {
+        background-color: #111827;
+        background-image: radial-gradient(circle at 50% 50%, #1f2937 0%, #111827 100%);
+    }
+
+    .glass-panel {
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    .parchment {
+        background-color: #fdf6e3;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E");
+        border: 1px solid #d6c4a0;
+        box-shadow: 
+            inset 0 0 30px rgba(139, 69, 19, 0.15), 
+            0 10px 20px rgba(0,0,0,0.4);
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: rgba(0,0,0,0.1);
+        border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.3);
+        border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(255,255,255,0.5);
+    }
+</style>
 </head>
   <body>
     <div id="root"></div>

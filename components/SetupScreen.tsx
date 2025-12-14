@@ -15,6 +15,8 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ mode, questionSets, setQuesti
 
   // Form state
   const [setName, setSetName] = useState('');
+  const [countdownSeconds, setCountdownSeconds] = useState(0);
+  const [requireCorrectAnswer, setRequireCorrectAnswer] = useState(true);
   
   // Math form state
   const [timesTables, setTimesTables] = useState<number[]>([]);
@@ -30,6 +32,9 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ mode, questionSets, setQuesti
     if (!set || set.mode !== mode) return;
 
     setSetName(set.name);
+    setCountdownSeconds(set.countdownSeconds || 0);
+    setRequireCorrectAnswer(set.requireCorrectAnswer ?? true);
+
     if (set.mode === GameMode.Math) {
       const mathSet = set as MathQuestionSet;
       setTimesTables(mathSet.timesTables);
@@ -53,6 +58,8 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ mode, questionSets, setQuesti
   
   const resetForm = () => {
     setSetName('');
+    setCountdownSeconds(0);
+    setRequireCorrectAnswer(true);
     setTimesTables([]);
     setOperations([]);
     setCustomEquations('');
@@ -67,6 +74,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ mode, questionSets, setQuesti
     }
     const id = selectedSetId === 'new' ? `custom-${Date.now()}` : selectedSetId;
     let newSet: QuestionSet;
+    const finalCountdown = countdownSeconds > 0 ? countdownSeconds : undefined;
 
     if (mode === GameMode.Math) {
       const parsedEquations = customEquations.split('\n').map(line => {
@@ -76,13 +84,13 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ mode, questionSets, setQuesti
         return { question, answer };
       }).filter(eq => eq.question && !isNaN(eq.answer));
 
-      newSet = { id, name: setName, mode: GameMode.Math, timesTables, operations, customEquations: parsedEquations } as MathQuestionSet;
+      newSet = { id, name: setName, mode: GameMode.Math, timesTables, operations, customEquations: parsedEquations, countdownSeconds: finalCountdown, requireCorrectAnswer } as MathQuestionSet;
     } else {
       if (spellingWords.length === 0 && wordList.trim() !== '') {
         alert('Please generate misspellings before saving.');
         return;
       }
-      newSet = { id, name: setName, mode: GameMode.Spelling, words: spellingWords } as SpellingQuestionSet;
+      newSet = { id, name: setName, mode: GameMode.Spelling, words: spellingWords, countdownSeconds: finalCountdown, requireCorrectAnswer } as SpellingQuestionSet;
     }
 
     const otherSets = questionSets.filter(s => s.id !== id);
@@ -183,7 +191,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ mode, questionSets, setQuesti
   const setsForCurrentMode = questionSets.filter(s => s.mode === mode);
 
   return (
-    <div className="p-6 bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-auto border border-gray-200">
+    <div className="p-4 md:p-6 bg-white md:rounded-2xl md:shadow-xl w-full h-screen md:h-auto md:max-w-2xl mx-auto md:border border-gray-200 overflow-y-auto">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-black text-gray-800 tracking-tight">{mode} Mode Setup</h2>
         <button onClick={onExit} className="text-gray-400 hover:text-gray-800 text-2xl font-bold">&times;</button>
@@ -202,6 +210,30 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ mode, questionSets, setQuesti
           <input type="text" value={setName} onChange={e => setSetName(e.target.value)} className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400" placeholder="e.g., Week 1 Spelling"/>
         </div>
       </div>
+
+       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 bg-gray-50 p-4 rounded-lg border">
+            <div>
+                <label htmlFor="countdown" className="block font-bold mb-2 text-gray-700">Countdown per Question (seconds)</label>
+                <input 
+                    type="number" 
+                    id="countdown"
+                    value={countdownSeconds} 
+                    onChange={e => setCountdownSeconds(Math.max(0, parseInt(e.target.value, 10) || 0))} 
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                    placeholder="0 for no timer"
+                />
+            </div>
+            <div className="flex items-center justify-start pt-6">
+                <input 
+                    type="checkbox" 
+                    id="requireCorrect" 
+                    checked={requireCorrectAnswer} 
+                    onChange={e => setRequireCorrectAnswer(e.target.checked)}
+                    className="w-5 h-5 accent-blue-500"
+                />
+                <label htmlFor="requireCorrect" className="ml-2 font-semibold text-gray-700">Require correct answer to advance?</label>
+            </div>
+        </div>
       
       <div className="bg-gray-50 p-4 rounded-lg border">
         {mode === GameMode.Math ? renderMathForm() : renderSpellingForm()}
