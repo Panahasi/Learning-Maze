@@ -54,12 +54,15 @@ if (word.length > 0) {
         // Duplicate the letter at index i to create a misspelling
         misspellings.add(word.substring(0, i) + word[i] + word[i] + word.substring(i + 1));
     }
-    if (word.length > 2) {
-        const i = Math.floor(Math.random() * word.length);
-        misspellings.add(word.substring(0, i) + word.substring(i + 1));
-    }
+if (word.length > 2) {
     const i = Math.floor(Math.random() * word.length);
-    const char = String.fromCharCode(97 + Math.floor(Math.random() * 26));
-    misspellings.add(word.substring(0, i) + char + word.substring(i));
-    return Array.from(misspellings).slice(0, 3);
+    misspellings.add(word.substring(0, i) + word.substring(i + 1));
+}
+
+// 2. Insertion (Adds a letter)
+const i = Math.floor(Math.random() * word.length);
+const char = String.fromCharCode(97 + Math.floor(Math.random() * 26));
+misspellings.add(word.substring(0, i) + char + word.substring(i));
+
+return Array.from(misspellings).slice(0, 3);
 };
