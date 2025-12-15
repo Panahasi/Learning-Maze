@@ -49,9 +49,10 @@ export const generateSpeech = async (text: string): Promise<string | null> => {
 
 const generateFallbackMisspellings = (word: string): string[] => {
     const misspellings = new Set<string>();
-    if (word.length > 3) {
-        const i = Math.floor(Math.random() * (word.length - 1));
-        misspellings.add(word.substring(0, i) + word[i+1] + word[i] + word.substring(i+2));
+if (word.length > 0) {
+        const i = Math.floor(Math.random() * word.length);
+        // Duplicate the letter at index i to create a misspelling
+        misspellings.add(word.substring(0, i) + word[i] + word[i] + word.substring(i + 1));
     }
     if (word.length > 2) {
         const i = Math.floor(Math.random() * word.length);
